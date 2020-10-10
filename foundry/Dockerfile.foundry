@@ -1,0 +1,19 @@
+FROM ubuntu:18.04
+
+ARG FOUNDRY_DOWNLOAD_WEBSITE
+ARG WORK_DIR="/usr/src/app"
+
+ENV FOUNDRY_DOWNLOAD_WEBSITE=$FOUNDRY_DOWNLOAD_WEBSITE
+ENV WORK_DIR=$WORK_DIR
+
+WORKDIR $WORK_DIR
+
+RUN apt-get install -y libssl-dev; \
+    curl -sL https://deb/nodesource/com/setup_12.x | sudo bash -; \
+    apt-get install -y nodejs
+
+RUN mkdir foundryvtt; mkdir foundrydata; \
+    cd foundryvtt; wget -O foundryvtt.zip "$FOUNDRY_DOWNLOAD_WEBSITE"; \
+    unzip foundryvtt.zip;
+
+CMD [ "node", "resources/app/main.js --dataPath=$WORK_DIR/foundrydata" ]
